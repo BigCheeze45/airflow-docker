@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  airflow:
+    image: apache/airflow:latest
+    working_dir: /opt/airflow
+    volumes:
+      - type: bind
+        source: .
+        target: /opt/airflow
+      - type: volume
+        source: package-library
+        target: /home/airflow/.local
+    environment:
+        - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://postgres:${AIRFLOW_DOCKER_PASSWORD}@metadb:5432/airflow
+        - SERVICE
+volumes:
+  package-library:
+    name: airflow-package-library

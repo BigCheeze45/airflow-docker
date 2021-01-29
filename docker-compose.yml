@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  scheduler:
+    extends:
+      file: airflow-common.yml
+      service: airflow
+    container_name: airflow-scheduler
+    depends_on:
+      - webserver
+    entrypoint: ["./scripts/wait-for-it.sh", "webserver:8080", "-s", "-t", "90", "--", "./scripts/init-airflow.sh"]
+    environment:
+      - SERVICE=scheduler
+  webserver:
+    extends:
+      file: airflow-common.yml
+      service: airflow
+    container_name: airflow-webserver
+    depends_on:
+      - metadb
+    entrypoint: ["./scripts/wait-for-it.sh", "metadb:5432", "-s", "-t", "30", "--", "./scripts/init-airflow.sh"]
+    environment:
+      - SERVICE=webserver
+      - AIRFLOW_DOCKER_PASSWORD
+      - AIRFLOW_DOCKER_EMAIL
+    ports:
+      - 8080:8080
+  metadb:
+    container_name: airflow-database
+    image: postgres:latest
+    volumes:
+      - type: volume
+        source: airflow-metadb
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./scripts/init-db.sql
+        target: /docker-entrypoint-initdb.d/init-db.sql
+    environment:
+      - POSTGRES_PASSWORD=${AIRFLOW_DOCKER_PASSWORD}
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    volumes:
+      - type: bind
+        source: ./servers.json
+        target: /pgadmin4/servers.json
+      - type: volume
+        source: pgadmin-data
+        target: /var/lib/pgadmin
+    ports:
+     - 80:80
+    environment:
+     - PGADMIN_DEFAULT_EMAIL=${AIRFLOW_DOCKER_EMAIL}
+     - PGADMIN_DEFAULT_PASSWORD=${AIRFLOW_DOCKER_PASSWORD}
+volumes:
+  airflow-metadb:
+    name: airflow-metadb
+  pgadmin-data:
+    name: pgadmin-data
+  package-library:
+    name: airflow-package-library
