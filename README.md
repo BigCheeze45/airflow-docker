@@ -20,13 +20,23 @@ To start the containers with just a minial installation (Airflow Core), run: `do
 ### Installing extra packages
 
 To install [extra Airflow packages](https://airflow.apache.org/docs/apache-airflow/stable/extra-packages-ref.html),
-you'll need to first build the image, specifying the `extras` build arg.
+you'll need to first build the image, specifying the `extras` build arg. [Additional build args](#build-args) can be
+found below.
 
 1. `docker-compose build --build-arg extras=ssh,microsoft.mssql,http`
 1. `docker-compose up -d`
 
 The Airflow scheduler and webserver each have their own container (define in [airflow-common](./airflow-common.yml)).
 The `airflow` directory is mounted in the containers at `/opt/airflow` as the `AIRFLOW_HOME` directory.
+
+## Build Args
+
+These build args can be specified when building images for the Airflow containers.
+
+|Arg           |Purpose               |Example                           |
+|:-------------|----------------------|---------------------------------:|
+|`extras`      |specifies [extra Airflow packages](https://airflow.apache.org/docs/apache-airflow/stable/extra-packages-ref.html) to install|`extras=ssh,microsoft.mssql,http` |
+|`requirements`|path to a `pip` requirements file use to install all other Python packages|`requirements=../requirements.txt`|
 
 ## Credentials
 
@@ -39,6 +49,7 @@ The `airflow` directory is mounted in the containers at `/opt/airflow` as the `A
 ## Images
 
 The following images are used:
+
 * [PostgreSQL](https://hub.docker.com/_/postgres)
 * [Apache Airflow](https://hub.docker.com/r/apache/airflow)
 * [pgAdmin](https://hub.docker.com/r/dpage/pgadmin4)

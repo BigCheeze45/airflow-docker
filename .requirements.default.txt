@@ -1,0 +1,3 @@
+# This is the default requirements.txt for the Dockerfile. DO NOT add anything here
+# This serves as a placeholder to be use when users don't provide a value for the
+# requirements ARG in the Dockerfile.
