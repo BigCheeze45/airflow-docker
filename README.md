@@ -4,7 +4,7 @@ An [Apache Airflow](https://airflow.apache.org/) stack for [docker](https://www.
 [`docker-compose`](https://docs.docker.com/compose/). pgAdmin is included to easily view and manage Airflow's meta
 database.
 
-**NOTE:** I put this together to learn docker. As such, I wouldn't recommend using this in production as is.
+**NOTE:** I put this together to learn docker. As such, I wouldn't recommend using it in production as is.
 
 ## Getting started
 
