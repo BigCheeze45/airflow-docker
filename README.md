@@ -1,19 +1,35 @@
 # Airflow-Docker
-An [Apache Airflow](https://airflow.apache.org/) stack for [docker](https://www.docker.com/), orchestrated using [`docker-compose`](https://docs.docker.com/compose/). pgAdmin is included to easily manage Airflow's meta database.
 
-Note that this is just a minial Airflow installation (Airflow Core). [Provider packages](https://airflow.apache.org/docs/) and [other extras](https://airflow.apache.org/docs/apache-airflow/stable/extra-packages-ref.html) will need to be installed once the containers are up and running.
+An [Apache Airflow](https://airflow.apache.org/) stack for [docker](https://www.docker.com/), orchestrated using
+[`docker-compose`](https://docs.docker.com/compose/). pgAdmin is included to easily view and manage Airflow's meta
+database.
+
+**NOTE:** I put this together to learn docker. As such, I wouldn't recommend using this in production as is.
 
 ## Getting started
-1. Set the following (required) environment variables:
-    
-    * `AIRFLOW_DOCKER_PASSWORD` - this password is used anywhere a password is required: postgres, pgadmin, Airflow webserver, etc...
-    * `AIRFLOW_DOCKER_EMAIL` - use as the login email for pgAdmin and email address for Airflow admin user.
 
-1. Start up the containers: `docker-compose up -d`
+Set the following environment variables:
 
-The Airflow scheduler and webserver each have their own container (define in [airflow-common](./airflow-common.yml)). Using bind mounts, the projects root directory is treated as the `AIRFLOW_HOME` directory and mounted in the containers at `/opt/airflow`. Site-packages (`/home/airflow/.local`) also get their own volume - allowing for packages installed in the containers to persist across session (as long as the volume is available).
+* `AIRFLOW_DOCKER_PASSWORD` - use anywhere a password is required: postgres, pgadmin, Airflow webserver, etc...
+* `AIRFLOW_DOCKER_EMAIL` - use as the email for the default pgaAdmin and Airflow admin user.
+
+### Airflow Core
+
+To start the containers with just a minial installation (Airflow Core), run: `docker-compose up -d`.
+
+### Installing extra packages
+
+To install [extra Airflow packages](https://airflow.apache.org/docs/apache-airflow/stable/extra-packages-ref.html),
+you'll need to first build the image, specifying the `extras` build arg.
+
+1. `docker-compose build --build-arg extras=ssh,microsoft.mssql,http`
+1. `docker-compose up -d`
+
+The Airflow scheduler and webserver each have their own container (define in [airflow-common](./airflow-common.yml)).
+The `airflow` directory is mounted in the containers at `/opt/airflow` as the `AIRFLOW_HOME` directory.
 
 ## Credentials
+
 |Service/app      |Username/email        |Password                 |Web console                              |
 |:----------------|----------------------|-------------------------|----------------------------------------:|
 |Postgres         |`postgres`            |`AIRFLOW_DOCKER_PASSWORD`|N/A                                      |
@@ -21,6 +37,7 @@ The Airflow scheduler and webserver each have their own container (define in [ai
 |Airflow webserver|`dadmin`              |`AIRFLOW_DOCKER_PASSWORD`|[localhost:8080](http://localhost:8080)  |
 
 ## Images
+
 The following images are used:
 * [PostgreSQL](https://hub.docker.com/_/postgres)
 * [Apache Airflow](https://hub.docker.com/r/apache/airflow)

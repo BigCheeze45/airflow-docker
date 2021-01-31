@@ -1,0 +1,6 @@
+.dockerignore
+.gitignore
+Dockerfile
+airflow-common.yml
+docker-compose.yml
+README.md

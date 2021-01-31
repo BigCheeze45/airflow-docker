@@ -8,7 +8,7 @@ services:
     container_name: airflow-scheduler
     depends_on:
       - webserver
-    entrypoint: ["./scripts/wait-for-it.sh", "webserver:8080", "-s", "-t", "90", "--", "./scripts/init-airflow.sh"]
+    entrypoint: [ "./scripts/wait-for-it.sh", "webserver:8080", "-s", "-t", "90", "--", "./scripts/init-airflow.sh" ]
     environment:
       - SERVICE=scheduler
   webserver:
@@ -18,7 +18,7 @@ services:
     container_name: airflow-webserver
     depends_on:
       - metadb
-    entrypoint: ["./scripts/wait-for-it.sh", "metadb:5432", "-s", "-t", "30", "--", "./scripts/init-airflow.sh"]
+    entrypoint: [ "./scripts/wait-for-it.sh", "metadb:5432", "-s", "-t", "30", "--", "./scripts/init-airflow.sh" ]
     environment:
       - SERVICE=webserver
       - AIRFLOW_DOCKER_PASSWORD
@@ -48,14 +48,12 @@ services:
         source: pgadmin-data
         target: /var/lib/pgadmin
     ports:
-     - 80:80
+      - 80:80
     environment:
-     - PGADMIN_DEFAULT_EMAIL=${AIRFLOW_DOCKER_EMAIL}
-     - PGADMIN_DEFAULT_PASSWORD=${AIRFLOW_DOCKER_PASSWORD}
+      - PGADMIN_DEFAULT_EMAIL=${AIRFLOW_DOCKER_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${AIRFLOW_DOCKER_PASSWORD}
 volumes:
   airflow-metadb:
     name: airflow-metadb
   pgadmin-data:
     name: pgadmin-data
-  package-library:
-    name: airflow-package-library
