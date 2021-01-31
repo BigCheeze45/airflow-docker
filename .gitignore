@@ -7,7 +7,7 @@
 
 # Airflow's home directory. Want to keep the folders but not all its generated content - minus tutorial.py
 airflow/
-!airflow/dags/tutorial.py
+!airflow/dags/.gitkeep
 !airflow/plugins/.gitkeep
 !airflow/logs/.gitkeep
 
