@@ -27,7 +27,7 @@ found below.
 1. `docker-compose up -d`
 
 The Airflow scheduler and webserver each have their own container (define in [airflow-common](./airflow-common.yml)).
-The `airflow` directory is mounted in the containers at `/opt/airflow` as the `AIRFLOW_HOME` directory.
+The `airflow` directory is mounted in the containers as `AIRFLOW_HOME` at `/opt/airflow`.
 
 ## Build Args
 
